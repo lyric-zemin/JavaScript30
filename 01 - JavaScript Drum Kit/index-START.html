@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
 
 
@@ -58,10 +60,30 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
 
-</script>
+    function removeTransition(evt) {
+      if (evt.propertyName !== 'transform') return
+      evt.target.classList.remove('playing')
+    }
+
+    document.querySelectorAll('.key').forEach(key => {
+      key.addEventListener('transitionend', removeTransition)
+    })
+
+    window.addEventListener('keydown', ({ keyCode }) => {
+      const key = document.querySelector(`.key[data-key="${keyCode}"]`)
+      const audio = document.querySelector(`audio[data-key="${keyCode}"]`)
+      if (!audio) return
+
+      key.classList.add('playing')
+      audio.currentTime = 0
+      audio.play()
+    })
+
+  </script>
 
 
 </body>
+
 </html>
