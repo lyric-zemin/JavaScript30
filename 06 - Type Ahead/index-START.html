@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Type Ahead 👀</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
 
   <form class="search-form">
@@ -15,9 +17,34 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  <script>
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-</script>
+    let cities = []
+
+    fetch(endpoint).then(res => {
+      if (res.ok) {
+        res.json().then(res => {
+          cities = res
+        })
+      }
+    })
+
+    function renderSuggest(list, value) {
+      document.querySelector('.suggestions').innerHTML = list.map(v => {
+        const ret = v.city + ',' + v.state
+        const reg = new RegExp(value, 'gi')
+
+        return `<li><span>${ret.replaceAll(reg, `<span class="hl">${value}</span>`)}</span></li>`
+      }).join('')
+    }
+
+    document.querySelector('.search').addEventListener('input', ({ target: { value } }) => {
+      const result = cities.filter(v => v.city.includes(value) || v.state.includes(value))
+      renderSuggest(result, value)
+    })
+
+  </script>
 </body>
+
 </html>

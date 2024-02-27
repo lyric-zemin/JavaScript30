@@ -1,20 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>HTML5 Canvas</title>
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
-<body>
-<canvas id="draw" width="800" height="800"></canvas>
-<script>
-</script>
 
-<style>
-  html, body {
-    margin: 0;
-  }
-</style>
+<body>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+
+  <canvas id="draw" width="800" height="800"></canvas>
+
+  <script>
+    const canvas = document.querySelector('#draw')
+    const ctx = canvas.getContext("2d");
+    let drawing = false
+    // 色相 0~360
+    let hue = 0
+    // 半径 0.1~20
+    let radius = 20
+    // 方向
+    let dir = true
+
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    canvas.addEventListener('mousedown', () => {
+      drawing = true
+    })
+    canvas.addEventListener('mousemove', ({ pageX, pageY }) => {
+      if (!drawing) return
+      ctx.beginPath()
+      ctx.fillStyle = `hsl(${hue}, 100%, 50%)`
+      ctx.arc(pageX, pageY, radius, 0, Math.PI * 2)
+      ctx.fill()
+      update()
+    })
+    canvas.addEventListener('mouseup', () => {
+      drawing = false
+    })
+    canvas.addEventListener("mouseleave", () => {
+      drawing = false
+    });
+
+    function update() {
+      hue++
+      hue = hue % 360
+
+      if (dir) {
+        radius -= 0.1
+      } else {
+        radius += 0.1
+      }
+
+      if (radius <= 0.1) dir = false
+      if (radius >= 20) dir = true
+    }
+  </script>
 
 </body>
+
 </html>
